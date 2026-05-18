@@ -1,0 +1,30 @@
+---
+description: C++ 스타일(C++17+, Google C++ Style, Doxygen, RAII)
+globs: "**/*.{cpp,cc,cxx,h,hpp,hxx}"
+alwaysApply: false
+---
+
+# C++ 코드 스타일 (MagicSquare)
+
+- **C++**: C++17 이상
+- **스타일**: Google C++ Style Guide 우선 적용
+- **타입**: 모든 함수 파라미터와 반환값에 명시적 타입 필수
+- **문서화**: Doxygen 스타일, 모든 public 클래스·public 메서드에 필수
+- **최대 줄 길이**: 100
+- **포매터**: clang-format 사용을 권장
+- **include**: 표준 라이브러리 -> 서드파티 -> 로컬 순서, 순환 include 금지
+
+## 네이밍
+
+- 클래스·구조체: `PascalCase`
+- 함수·변수: `lower_snake_case`
+- 상수: `kPascalCase`
+- private 멤버: 프로젝트 스타일에 맞춰 일관되게 사용
+
+## 메모리와 소유권
+
+- 값 타입과 RAII를 우선한다.
+- 소유권이 필요한 경우 `std::unique_ptr`를 우선 사용한다.
+- 공유 소유권이 명확할 때만 `std::shared_ptr`를 사용한다.
+- 직접 `new` / `delete`는 사용하지 않는다.
+- 변경하지 않는 값과 메서드는 `const`로 표현한다.

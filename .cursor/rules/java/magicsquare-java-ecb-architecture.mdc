@@ -1,0 +1,57 @@
+---
+description: Java ECB 3레이어 정의·의존성 방향·권장 패키지 트리
+globs: "**/*.java"
+alwaysApply: false
+---
+
+# ECB 아키텍처 (MagicSquare Java)
+
+## 레이어
+
+### Boundary - 외부 입출력
+
+- **역할**: CLI, REST controller, 파일 어댑터 등 외부와의 접점
+- **포함**: 콘솔 UI, HTTP controller, file adapter
+- **금지**: 도메인 규칙·유스케이스 분기를 여기서 구현하지 말 것(위임만)
+
+### Control - 비즈니스 로직
+
+- **역할**: 유스케이스·오케스트레이션·애플리케이션 서비스
+- **포함**: use case class, application service, workflow 조합
+- **의존**: `entity`만(도메인 쪽)
+
+### Entity - 도메인
+
+- **역할**: 도메인 데이터·불변식·순수 도메인 규칙
+- **포함**: 엔티티·값 객체·도메인 서비스(순수 로직)
+- **의존**: 다른 ECB 레이어에 의존하지 않음
+
+## 의존성 방향
+
+- **원칙**: 의존성은 항상 **안쪽(도메인)** 을 향한다.
+- **허용**: `boundary -> control -> entity`, `control -> entity`
+- **금지**:
+  - `entity`가 `control`·`boundary`에 의존
+  - `control`이 `boundary`의 구체 controller/adapter에 직접 의존
+
+## 권장 패키지 트리(개념)
+
+```text
+src/main/java/magicsquare/
+├── boundary/
+│   ├── api/
+│   ├── cli/
+│   └── ui/
+├── control/
+│   └── usecase/
+└── entity/
+    ├── model/
+    └── service/
+
+src/test/java/magicsquare/
+├── boundary/
+├── control/
+└── entity/
+```
+
+루트 패키지 이름은 저장소에 맞게 바꿀 수 있으나, **ECB 3분할**과 **테스트 패키지 미러**는 유지한다.
